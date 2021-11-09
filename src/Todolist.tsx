@@ -1,11 +1,8 @@
-import React, {ChangeEvent, FC, KeyboardEvent, useState} from "react";
-import {FilterValuesType} from "./App";
+import React, {ChangeEvent, FC} from "react";
+import {FilterValuesType, TaskType} from "./App";
+import {AddItemForm} from "./components/AddItemForm";
+import {EditableSpan} from "./components/EditableSpan";
 
-export type TaskType = {
-  id: string
-  title: string
-  isDone: boolean
-}
 
 type PropsType = {
   title: string
@@ -17,6 +14,8 @@ type PropsType = {
   filter: FilterValuesType
   todolistId: string
   removeTodolist: (todolistId: string) => void
+  changeTaskTitle: (params: { todolistId: string, taskId: string, title: string }) => void
+  changeTodolistTitle: (params: { todolistId: string, title: string }) => void
 }
 
 export const Todolist: FC<PropsType> = (props) => {
@@ -29,10 +28,9 @@ export const Todolist: FC<PropsType> = (props) => {
     filter,
     todolistId,
     removeTodolist,
+    changeTaskTitle,
+    changeTodolistTitle,
   } = props
-
-  const [newTaskTitle, setNewTaskTitle] = useState('')
-  const [error, setError] = useState(false)
 
 
   const onAllButtonClick = () => {
@@ -44,60 +42,30 @@ export const Todolist: FC<PropsType> = (props) => {
   const onCompletedButtonClick = () => {
     changeFilter(todolistId, 'completed')
   }
-  const onAddTaskButtonClickHandler = () => {
-    if (newTaskTitle.trim().length > 0) {
-      addTask(newTaskTitle.trim(), todolistId)
-      setNewTaskTitle('')
-      setError(false)
-    } else {
-      setNewTaskTitle('')
-      setError(true)
-    }
-  }
-  const onNewTaskTitleInputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if (error) {
-      setNewTaskTitle(e.currentTarget.value)
-      setError(false)
-    }
-    setNewTaskTitle(e.currentTarget.value)
-  }
-
-  const onEnterKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.ctrlKey && e.charCode === 13) {
-      if (newTaskTitle.trim().length > 0) {
-        addTask(newTaskTitle.trim(), todolistId)
-        setNewTaskTitle('')
-        setError(false)
-      } else {
-        setNewTaskTitle('')
-        setError(true)
-      }
-    }
-  }
-
   const onRemoveTodolistHandler = () => {
     removeTodolist(todolistId)
   }
-
+  const addTaskWrapper = (title: string) => {
+    addTask(todolistId, title)
+  }
+  const onChangeTodolistTitle = (title: string) => {
+    changeTodolistTitle({todolistId, title})
+  }
 
   return (
     <div>
-      <h3>{title}
+      <h3>
+        <EditableSpan title={title} callback={onChangeTodolistTitle}/>
         <button onClick={onRemoveTodolistHandler}>x</button>
       </h3>
-      <div>
-        <input className={error ? 'error' : ''}
-               onKeyPress={onEnterKeyPressHandler}
-               value={newTaskTitle}
-               onChange={onNewTaskTitleInputChangeHandler}
-               type="text"/>
-        <button onClick={onAddTaskButtonClickHandler}>+</button>
-        {error && <div className={'error-message'}>Title is required</div>}
-      </div>
+      <AddItemForm callback={addTaskWrapper}/>
       <ul>
         {props.tasks.map(t => {
           const onChangeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
             onChangeTaskStatus(e.currentTarget.checked, t.id, todolistId)
+          }
+          const onChangeTaskTitleHandler = (title: string) => {
+            changeTaskTitle({todolistId, taskId: t.id, title})
           }
           const onRemoveButtonClickHandler = () => {
             removeTask(t.id, todolistId)
@@ -105,7 +73,7 @@ export const Todolist: FC<PropsType> = (props) => {
           return (
             <li key={`${t.id}-${t.title}`} className={t.isDone ? "is-done" : ""}>
               <input onChange={onChangeTaskStatusHandler} type="checkbox" checked={t.isDone}/>
-              <span>{t.title}</span>
+              <EditableSpan callback={onChangeTaskTitleHandler} title={t.title}/>
               <button onClick={onRemoveButtonClickHandler}>x</button>
             </li>)
         })}
@@ -124,3 +92,4 @@ export const Todolist: FC<PropsType> = (props) => {
     </div>
   )
 }
+

@@ -4,6 +4,8 @@ import {v1} from "uuid";
 import {AddItemForm} from "./components/AddItemForm";
 import {AppBar, Box, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
+import {FilterValuesType, TodolistsType, TodolistType} from "./store/todolistReducer/todolistReducer";
+import {TasksType} from "./store/tasksReducer/tasksReducer";
 
 const App = () => {
   // DATA
@@ -30,13 +32,7 @@ const App = () => {
   const changeTodolistTitle = (params: { todolistId: string, title: string }) => {
     setTodolists(todolists.map(tl => tl.id === params.todolistId ? {...tl, title: params.title} : tl))
   }
-  const addTodolist = (title: string) => {
-    const newTodolistId = v1()
-    const newTodolist: TodolistType = {id: newTodolistId, title, filter: "all"}
-    setTodolists([newTodolist, ...todolists])
-    tasks[newTodolistId] = []
-    setTasks({...tasks})
-  }
+
   const removeTodolist = (todolistId: string) => {
     setTodolists(todolists.filter(tl => tl.id !== todolistId))
     delete tasks[todolistId]
@@ -67,6 +63,15 @@ const App = () => {
   const changeTaskTitle = (params: { todolistId: string, taskId: string, title: string }) => {
     let ourTasks = tasks[params.todolistId]
     tasks[params.todolistId] = ourTasks.map(el => el.id === params.taskId ? {...el, title: params.title} : el)
+    setTasks({...tasks})
+  }
+
+  // IN REDUCER
+  const addTodolist = (title: string) => {
+    const newTodolistId = v1()
+    const newTodolist: TodolistType = {id: newTodolistId, title, filter: "all"}
+    setTodolists([newTodolist, ...todolists])
+    tasks[newTodolistId] = []
     setTasks({...tasks})
   }
 
@@ -131,21 +136,8 @@ const App = () => {
 }
 
 // TYPES
-export type FilterValuesType = "all" | "active" | "completed"
-export type TaskType = {
-  id: string
-  title: string
-  isDone: boolean
-}
-export type TasksType = {
-  [key: string]: Array<TaskType>
-}
-export type TodolistType = {
-  id: string
-  title: string
-  filter: FilterValuesType
-}
-export type TodolistsType = Array<TodolistType>
+
+
 
 
 export default App;

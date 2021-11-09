@@ -1,9 +1,10 @@
 import React, {ChangeEvent, FC} from "react";
-import {FilterValuesType, TaskType} from "./App";
 import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
 import {Box, Button, Checkbox, IconButton, Typography} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import {TaskType} from "./store/tasksReducer/tasksReducer";
+import {FilterValuesType} from "./store/todolistReducer/todolistReducer";
 
 
 type PropsType = {

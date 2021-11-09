@@ -1,14 +1,18 @@
 import React, {ChangeEvent, FC, KeyboardEvent, useState} from "react";
+import {TextField} from "@mui/material";
 
 type EditableSpanPropsType = {
   title: string
   callback: (title: string) => void
 }
+
 export const EditableSpan: FC<EditableSpanPropsType> = (props) => {
 
+  // DATA
   const [title, setTitle] = useState("")
   const [editMode, setEditMode] = useState(false)
 
+  // ACTIONS
   const activateEditMode = () => {
     setEditMode(true)
     setTitle(props.title)
@@ -30,14 +34,15 @@ export const EditableSpan: FC<EditableSpanPropsType> = (props) => {
       }
     }
   }
+
   return (
     editMode
-      ? <input onChange={onChangeTitleHandler}
-               onKeyPress={onEnterKeyPressHandler}
-               onBlur={activateViewMode}
-               autoFocus
-               type="text"
-               value={title}
+      ? <TextField onChange={onChangeTitleHandler}
+                   onKeyPress={onEnterKeyPressHandler}
+                   onBlur={activateViewMode}
+                   autoFocus
+                   type="text"
+                   value={title}
       />
       : <span onDoubleClick={activateEditMode}>{props.title}</span>
   )

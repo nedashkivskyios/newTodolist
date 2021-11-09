@@ -2,6 +2,8 @@ import React, {ChangeEvent, FC} from "react";
 import {FilterValuesType, TaskType} from "./App";
 import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
+import {Box, Button, Checkbox, IconButton, Typography} from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 type PropsType = {
@@ -32,7 +34,7 @@ export const Todolist: FC<PropsType> = (props) => {
     changeTodolistTitle,
   } = props
 
-
+  // ACTIONS
   const onAllButtonClick = () => {
     changeFilter(todolistId, 'all')
   }
@@ -53,13 +55,15 @@ export const Todolist: FC<PropsType> = (props) => {
   }
 
   return (
-    <div>
-      <h3>
+    <Box>
+      <Typography variant={'h5'}>
         <EditableSpan title={title} callback={onChangeTodolistTitle}/>
-        <button onClick={onRemoveTodolistHandler}>x</button>
-      </h3>
+        <IconButton aria-label={'delete-todolist'} onClick={onRemoveTodolistHandler}>
+          <DeleteIcon/>
+        </IconButton>
+      </Typography>
       <AddItemForm callback={addTaskWrapper}/>
-      <ul>
+      <Box>
         {props.tasks.map(t => {
           const onChangeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
             onChangeTaskStatus(e.currentTarget.checked, t.id, todolistId)
@@ -71,25 +75,27 @@ export const Todolist: FC<PropsType> = (props) => {
             removeTask(t.id, todolistId)
           }
           return (
-            <li key={`${t.id}-${t.title}`} className={t.isDone ? "is-done" : ""}>
-              <input onChange={onChangeTaskStatusHandler} type="checkbox" checked={t.isDone}/>
+            <Box key={`${t.id}-${t.title}`} className={t.isDone ? "is-done" : ""}>
+              <Checkbox checked={t.isDone} onChange={onChangeTaskStatusHandler}/>
               <EditableSpan callback={onChangeTaskTitleHandler} title={t.title}/>
-              <button onClick={onRemoveButtonClickHandler}>x</button>
-            </li>)
+              <IconButton aria-label={'delete-task'} onClick={onRemoveButtonClickHandler}>
+                <DeleteIcon/>
+              </IconButton>
+            </Box>);
         })}
-      </ul>
-      <div>
-        <button className={filter === 'all' ? 'active-filter' : ""}
+      </Box>
+      <Box>
+        <Button variant={filter === 'all' ? 'contained' : 'text'}
                 onClick={onAllButtonClick}>All
-        </button>
-        <button className={filter === 'active' ? 'active-filter' : ""}
+        </Button>
+        <Button color={'primary'} variant={filter === 'active' ? 'contained' : 'text'}
                 onClick={onActiveButtonClick}>Active
-        </button>
-        <button className={filter === 'completed' ? 'active-filter' : ""}
+        </Button>
+        <Button color={'secondary'} variant={filter === 'completed' ? 'contained' : 'text'}
                 onClick={onCompletedButtonClick}>Complete
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Box>
   )
 }
 

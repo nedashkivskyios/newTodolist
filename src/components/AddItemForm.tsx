@@ -1,13 +1,18 @@
 import React, {ChangeEvent, FC, KeyboardEvent, useState} from "react";
+import {Box, IconButton, TextField} from "@mui/material";
+import {AddBox} from "@mui/icons-material";
 
 type AddItemFormPropsType = {
   callback: (title: string) => void
 }
 
 export const AddItemForm: FC<AddItemFormPropsType> = (props) => {
+
+  // DATA
   const [newTaskTitle, setNewTaskTitle] = useState('')
   const [error, setError] = useState(false)
 
+  // ACTIONS
   const onAddTaskButtonClickHandler = () => {
     if (newTaskTitle.trim().length > 0) {
       props.callback(newTaskTitle.trim())
@@ -25,7 +30,6 @@ export const AddItemForm: FC<AddItemFormPropsType> = (props) => {
     }
     setNewTaskTitle(e.currentTarget.value)
   }
-
   const onEnterKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.ctrlKey && e.charCode === 13) {
       if (newTaskTitle.trim().length > 0) {
@@ -38,15 +42,20 @@ export const AddItemForm: FC<AddItemFormPropsType> = (props) => {
       }
     }
   }
+
   return (
-    <div>
-      <input className={error ? 'error' : ''}
-             onKeyPress={onEnterKeyPressHandler}
-             value={newTaskTitle}
-             onChange={onNewTaskTitleInputChangeHandler}
-             type="text"/>
-      <button onClick={onAddTaskButtonClickHandler}>+</button>
-      {error && <div className={'error-message'}>Title is required</div>}
-    </div>
+    <Box>
+      <TextField error={error ? !!('error') : !!('')}
+                 variant={'outlined'}
+                 label={'Enter text'}
+                 helperText={error ? "Title is required" : ''}
+                 onKeyPress={onEnterKeyPressHandler}
+                 value={newTaskTitle}
+                 onChange={onNewTaskTitleInputChangeHandler}
+                 type="text"/>
+      <IconButton onClick={onAddTaskButtonClickHandler} color={'primary'}>
+        <AddBox/>
+      </IconButton>
+    </Box>
   )
 }

@@ -17,16 +17,18 @@ export const todolistReducer = (state = initialValue, action: TodolistReducersAc
     case "REMOVE-TODOLIST": {
       return state.filter(tl => tl.id !== action.todolistId)
     }
+    case "CHANGE-TODOLIST-TITLE": {
+      return state.map(tl => tl.id === action.todolistId ? {...tl, title: action.title} : tl)
+    }
+    case "CHANGE-TODOLIST-FILTER": {
+      return state.map(tl => tl.id === action.todolistId ? {...tl, filter: action.filter} : tl)
+    }
     default: {
       return state
     }
-
   }
 }
 
-export type TodolistReducersActionType =
-  ReturnType<typeof addTodolistAC>
-  | ReturnType<typeof removeTodolistAC>
 
 export const addTodolistAC = (title: string) => {
   return {
@@ -34,13 +36,32 @@ export const addTodolistAC = (title: string) => {
     title: title,
   } as const
 }
-
 export const removeTodolistAC = (todolistId: string) => {
   return {
     type: 'REMOVE-TODOLIST',
     todolistId,
   } as const
 }
+export const changeTodolistTitleAC = (params: { todolistId: string, title: string }) => {
+  return {
+    type: 'CHANGE-TODOLIST-TITLE',
+    todolistId: params.todolistId,
+    title: params.title,
+  } as const
+}
+export const changeTodolistFilterAC = (params: { todolistId: string, filter: FilterValuesType }) => {
+  return {
+    type: 'CHANGE-TODOLIST-FILTER',
+    todolistId: params.todolistId,
+    filter: params.filter,
+  } as const
+}
+
+export type TodolistReducersActionType =
+  ReturnType<typeof addTodolistAC>
+  | ReturnType<typeof removeTodolistAC>
+  | ReturnType<typeof changeTodolistTitleAC>
+  | ReturnType<typeof changeTodolistFilterAC>
 
 export type FilterValuesType = "all" | "active" | "completed"
 export type TodolistType = {

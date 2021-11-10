@@ -29,14 +29,24 @@ const App = () => {
   })
 
   // ACTIONS FOR TODOLIST
-  const changeTodolistTitle = (params: { todolistId: string, title: string }) => {
-    setTodolists(todolists.map(tl => tl.id === params.todolistId ? {...tl, title: params.title} : tl))
+  const addTodolist = (title: string) => {
+    const newTodolistId = v1()
+    const newTodolist: TodolistType = {id: newTodolistId, title, filter: "all"}
+    setTodolists([newTodolist, ...todolists])
+    tasks[newTodolistId] = []
+    setTasks({...tasks})
   }
-
   const removeTodolist = (todolistId: string) => {
     setTodolists(todolists.filter(tl => tl.id !== todolistId))
     delete tasks[todolistId]
     setTasks(tasks)
+  }
+  const changeTodolistTitle = (params: { todolistId: string, title: string }) => {
+    setTodolists(todolists.map(tl => tl.id === params.todolistId ? {...tl, title: params.title} : tl))
+  }
+  const changeTodolistFilter = (todolistId: string, filter: FilterValuesType) => {
+    const newTodolists = todolists.map(el => el.id === todolistId ? {...el, filter} : el)
+    setTodolists(newTodolists)
   }
 
   // ACTIONS FOR TASKS
@@ -51,10 +61,6 @@ const App = () => {
     tasks[todolistId] = [...ourTasks, newTask]
     setTasks({...tasks})
   }
-  const changeFilter = (todolistId: string, filter: FilterValuesType) => {
-    const newTodolists = todolists.map(el => el.id === todolistId ? {...el, filter} : el)
-    setTodolists(newTodolists)
-  }
   const onChangeTaskStatus = (checked: boolean, taskId: string, todolistId: string) => {
     let ourTasks = tasks[todolistId]
     tasks[todolistId] = ourTasks.map(el => el.id === taskId ? {...el, isDone: checked} : el)
@@ -63,15 +69,6 @@ const App = () => {
   const changeTaskTitle = (params: { todolistId: string, taskId: string, title: string }) => {
     let ourTasks = tasks[params.todolistId]
     tasks[params.todolistId] = ourTasks.map(el => el.id === params.taskId ? {...el, title: params.title} : el)
-    setTasks({...tasks})
-  }
-
-  // IN REDUCER
-  const addTodolist = (title: string) => {
-    const newTodolistId = v1()
-    const newTodolist: TodolistType = {id: newTodolistId, title, filter: "all"}
-    setTodolists([newTodolist, ...todolists])
-    tasks[newTodolistId] = []
     setTasks({...tasks})
   }
 
@@ -119,7 +116,7 @@ const App = () => {
                     tasks={tasksForTodolist}
                     addTask={addTask}
                     removeTask={removeTask}
-                    changeFilter={changeFilter}
+                    changeFilter={changeTodolistFilter}
                     removeTodolist={removeTodolist}
                     changeTaskTitle={changeTaskTitle}
                     changeTodolistTitle={changeTodolistTitle}
@@ -133,11 +130,6 @@ const App = () => {
       </Container>
     </Box>
   );
-}
-
-// TYPES
-
-
-
+};
 
 export default App;

@@ -3,56 +3,66 @@ import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
 import {Box, Button, Checkbox, IconButton, Typography} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-import {TaskType} from "./store/tasksReducer/tasksReducer";
-import {FilterValuesType} from "./store/todolistReducer/todolistReducer";
+import {
+  addTaskAC,
+  changeTaskStatusAC,
+  changeTaskTitleAC,
+  removeTaskAC,
+  TaskType,
+} from "./store/tasksReducer/tasksReducer";
+import {
+  changeTodolistFilterAC,
+  changeTodolistTitleAC,
+  FilterValuesType,
+  removeTodolistAC,
+} from "./store/todolistReducer/todolistReducer";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "./store/store";
 
 
 type PropsType = {
   title: string
-  tasks: TaskType[]
-  removeTask: (id: string, todolistId: string) => void
-  changeFilter: (todolistId: string, filter: FilterValuesType) => void
-  addTask: (newTaskTitle: string, todolistId: string) => void
-  onChangeTaskStatus: (checked: boolean, taskId: string, todolistId: string) => void
   filter: FilterValuesType
   todolistId: string
-  removeTodolist: (todolistId: string) => void
-  changeTaskTitle: (todolistId: string, taskId: string, title: string) => void
-  changeTodolistTitle: (todolistId: string, title: string) => void
 }
 
 export const Todolist: FC<PropsType> = (props) => {
   const {
     title,
-    removeTask,
-    changeFilter,
-    addTask,
-    onChangeTaskStatus,
     filter,
     todolistId,
-    removeTodolist,
-    changeTaskTitle,
-    changeTodolistTitle,
   } = props
+
+  const tasks = useSelector<AppRootStateType, TaskType[]>(state => state.tasks[todolistId])
+  const dispatch = useDispatch()
+
 
   // ACTIONS
   const onAllButtonClick = () => {
-    changeFilter(todolistId, 'all')
+    dispatch(changeTodolistFilterAC({todolistId, filter: 'all'}))
   }
   const onActiveButtonClick = () => {
-    changeFilter(todolistId, 'active')
+    dispatch(changeTodolistFilterAC({todolistId, filter: 'active'}))
   }
   const onCompletedButtonClick = () => {
-    changeFilter(todolistId, 'completed')
+    dispatch(changeTodolistFilterAC({todolistId, filter: 'completed'}))
   }
   const onRemoveTodolistHandler = () => {
-    removeTodolist(todolistId)
+    dispatch(removeTodolistAC(todolistId))
   }
   const addTaskWrapper = (title: string) => {
-    addTask(todolistId, title)
+    dispatch(addTaskAC({todolistId, title}))
   }
   const onChangeTodolistTitle = (title: string) => {
-    changeTodolistTitle(title, todolistId)
+    dispatch(changeTodolistTitleAC({todolistId, title}))
+  }
+
+  let tasksForTodolist = tasks
+  if (filter === "completed") {
+    tasksForTodolist = tasks.filter(t => t.isDone)
+  }
+  if (filter === "active") {
+    tasksForTodolist = tasks.filter(t => !t.isDone)
   }
 
   return (
@@ -65,15 +75,16 @@ export const Todolist: FC<PropsType> = (props) => {
       </Typography>
       <AddItemForm callback={addTaskWrapper}/>
       <Box>
-        {props.tasks.map(t => {
+        {tasksForTodolist.map(t => {
+
           const onChangeTaskStatusHandler = (e: ChangeEvent<HTMLInputElement>) => {
-            onChangeTaskStatus(e.currentTarget.checked, t.id, todolistId)
+            dispatch(changeTaskStatusAC({checked: e.currentTarget.checked, taskId: t.id, todolistId}))
           }
           const onChangeTaskTitleHandler = (title: string) => {
-            changeTaskTitle(todolistId, t.id, title)
+            dispatch(changeTaskTitleAC({title, taskId: t.id, todolistId}))
           }
           const onRemoveButtonClickHandler = () => {
-            removeTask(t.id, todolistId)
+            dispatch(removeTaskAC({taskId: t.id, todolistId}))
           }
           return (
             <Box key={`${t.id}-${t.title}`} className={t.isDone ? "is-done" : ""}>

@@ -18,8 +18,8 @@ export const tasksReducer = (state = initialValue, action: TasksReducerACTypes):
   switch (action.type) {
     case "ADD-TODOLIST": {
       return {
-        [action.todolistId]: [],
         ...state,
+        [action.todolistId]: [],
       }
     }
     case "REMOVE-TODOLIST": {

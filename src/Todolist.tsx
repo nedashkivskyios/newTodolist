@@ -17,8 +17,8 @@ type PropsType = {
   filter: FilterValuesType
   todolistId: string
   removeTodolist: (todolistId: string) => void
-  changeTaskTitle: (params: { todolistId: string, taskId: string, title: string }) => void
-  changeTodolistTitle: (params: { todolistId: string, title: string }) => void
+  changeTaskTitle: (todolistId: string, taskId: string, title: string) => void
+  changeTodolistTitle: (todolistId: string, title: string) => void
 }
 
 export const Todolist: FC<PropsType> = (props) => {
@@ -52,7 +52,7 @@ export const Todolist: FC<PropsType> = (props) => {
     addTask(todolistId, title)
   }
   const onChangeTodolistTitle = (title: string) => {
-    changeTodolistTitle({todolistId, title})
+    changeTodolistTitle(title, todolistId)
   }
 
   return (
@@ -70,7 +70,7 @@ export const Todolist: FC<PropsType> = (props) => {
             onChangeTaskStatus(e.currentTarget.checked, t.id, todolistId)
           }
           const onChangeTaskTitleHandler = (title: string) => {
-            changeTaskTitle({todolistId, taskId: t.id, title})
+            changeTaskTitle(todolistId, t.id, title)
           }
           const onRemoveButtonClickHandler = () => {
             removeTask(t.id, todolistId)

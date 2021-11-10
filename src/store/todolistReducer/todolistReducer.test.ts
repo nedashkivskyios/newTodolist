@@ -1,22 +1,22 @@
-import {v1} from "uuid";
 import {
   addTodolistAC,
   changeTodolistFilterAC,
   changeTodolistTitleAC,
   FilterValuesType,
   removeTodolistAC,
+  todolistId1,
+  todolistId2,
   todolistReducer,
   TodolistsType,
 } from "./todolistReducer";
 
-export const todolistId1 = v1()
-export const todolistId2 = v1()
+
 let initialState: TodolistsType
 
 beforeEach(() => {
   initialState = [
-    {id: todolistId1, title: "What to learn", filter: "all"},
-    {id: todolistId2, title: "What to bye", filter: "all"},
+    {todolistId: todolistId1, title: "What to learn", filter: "all"},
+    {todolistId: todolistId2, title: "What to bye", filter: "all"},
   ]
 })
 
@@ -33,7 +33,7 @@ test('todolist should be correctly deleted', () => {
   const newState = todolistReducer(initialState, removeTodolistAC(todolistId1))
 
   expect(newState.length).toBe(1)
-  expect(newState[0].id).toBe(todolistId2)
+  expect(newState[0].todolistId).toBe(todolistId2)
   expect(newState[0].title).toBe("What to bye")
 })
 
@@ -42,10 +42,10 @@ test('todolist1 title should be corect changed', () => {
   const newState = todolistReducer(initialState, changeTodolistTitleAC({todolistId: todolistId1, title: newTitle}))
 
   expect(newState.length).toBe(2)
-  expect(newState[0].id).toBe(todolistId1)
+  expect(newState[0].todolistId).toBe(todolistId1)
   expect(newState[0].filter).toBe("all")
   expect(newState[0].title).toBe(newTitle)
-  expect(newState[1].id).toBe(initialState[1].id)
+  expect(newState[1].todolistId).toBe(initialState[1].todolistId)
   expect(newState[1].filter).toBe(initialState[1].filter)
   expect(newState[1].title).toBe(initialState[1].title)
 })

@@ -1,8 +1,8 @@
 import React, {ChangeEvent, FC, useCallback} from "react";
 import {useDispatch} from "react-redux";
-import {changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, TaskType} from "../store/tasksReducer/tasksReducer";
+import {changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, TaskType} from "../../store/tasksReducer/tasksReducer";
 import {Box, Checkbox, IconButton} from "@mui/material";
-import {EditableSpan} from "./EditableSpan";
+import {EditableSpan} from "../EditableSpan/EditableSpan";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 type TaskPropsType = {

@@ -7,6 +7,7 @@ type EditableSpanPropsType = {
 }
 
 export const EditableSpan: FC<EditableSpanPropsType> = memo((props) => {
+  console.log("adsfasdf")
 
   // DATA
   const [title, setTitle] = useState("")

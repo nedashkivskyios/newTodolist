@@ -4,16 +4,17 @@ import {
   changeTodolistTitleAC,
   FilterValuesType,
   removeTodolistAC,
-  todolistId1,
-  todolistId2,
   todolistReducer,
   TodolistsType,
 } from "./todolistReducer";
+import {v1} from "uuid";
 
-
+export let todolistId1 = v1()
+export let todolistId2 = v1()
 let initialState: TodolistsType
 
 beforeEach(() => {
+
   initialState = [
     {todolistId: todolistId1, title: "What to learn", filter: "all"},
     {todolistId: todolistId2, title: "What to bye", filter: "all"},

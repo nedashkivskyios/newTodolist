@@ -1,6 +1,6 @@
 import React, {FC, memo, useCallback} from "react";
-import {AddItemForm} from "./components/AddItemForm";
-import {EditableSpan} from "./components/EditableSpan";
+import {AddItemForm} from "./components/AddItemForm/AddItemForm";
+import {EditableSpan} from "./components/EditableSpan/EditableSpan";
 import {Box, Button, IconButton, Typography} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {addTaskAC, TaskType} from "./store/tasksReducer/tasksReducer";
@@ -12,7 +12,7 @@ import {
 } from "./store/todolistReducer/todolistReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./store/store";
-import {Task} from "./components/Task";
+import {Task} from "./components/Task/Task";
 
 type PropsType = {
   title: string

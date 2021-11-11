@@ -1,19 +1,8 @@
 import {v1} from "uuid";
-import {addTodolistAC, removeTodolistAC, todolistId1, todolistId2} from "../todolistReducer/todolistReducer";
+import {addTodolistAC, removeTodolistAC} from "../todolistReducer/todolistReducer";
 
 
-const initialValue: TasksType = {
-  [todolistId1]: [
-    {id: v1(), title: "CSS", isDone: true},
-    {id: v1(), title: "JS", isDone: true},
-    {id: v1(), title: "React", isDone: false},
-    {id: v1(), title: "Redux", isDone: false},
-  ],
-  [todolistId2]: [
-    {id: v1(), title: "book", isDone: true},
-    {id: v1(), title: "milk", isDone: true},
-  ],
-}
+const initialValue: TasksType = {}
 export const tasksReducer = (state = initialValue, action: TasksReducerACTypes): TasksType => {
   switch (action.type) {
     case "ADD-TODOLIST": {

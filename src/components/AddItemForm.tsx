@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FC, KeyboardEvent, useState} from "react";
+import React, {ChangeEvent, FC, KeyboardEvent, memo, useState} from "react";
 import {Box, IconButton, TextField} from "@mui/material";
 import {AddBox} from "@mui/icons-material";
 
@@ -6,7 +6,7 @@ type AddItemFormPropsType = {
   callback: (title: string) => void
 }
 
-export const AddItemForm: FC<AddItemFormPropsType> = (props) => {
+export const AddItemForm: FC<AddItemFormPropsType> = memo((props) => {
 
   // DATA
   const [newTaskTitle, setNewTaskTitle] = useState('')
@@ -58,4 +58,4 @@ export const AddItemForm: FC<AddItemFormPropsType> = (props) => {
       </IconButton>
     </Box>
   )
-}
+})
